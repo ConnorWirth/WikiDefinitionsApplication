@@ -15,6 +15,14 @@ namespace WikiDefinitionsApplication
         public Form1()
         {
             InitializeComponent();
+
+            // Save button is disabled before program to stop user from saving program with no data in listview
+            buttonSave.Enabled = false;
+        }
+
+        private void buttonAdd_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
