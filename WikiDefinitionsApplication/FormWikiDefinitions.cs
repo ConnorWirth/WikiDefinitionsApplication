@@ -11,6 +11,8 @@ using static System.Net.Mime.MediaTypeNames;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using System.IO;
 using System.Xml.Linq;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
+using System.Reflection;
 
 namespace WikiDefinitionsApplication
 {
@@ -28,7 +30,6 @@ namespace WikiDefinitionsApplication
         private void FormWikiDefinitions_Load(object sender, EventArgs e)
         {
             PopulateComboBox();
-
         }
 
         // 6.2 Create a global List<T> of type Information called Wiki.
@@ -45,19 +46,45 @@ namespace WikiDefinitionsApplication
             // Check if the name is valid (not a duplicate)
             if (ValidName(name))
             {
-                // Add the new information to the list
-                Information newInformation = new Information();
-                newInformation.SetName(name);
-                newInformation.SetCategory(comboBoxCategory.Text);
-                newInformation.SetStructure(GetSelectedRadioButtonValue());
-                newInformation.SetDefinition(textBoxDefinition.Text);
-                buttonSave.Enabled = true;
-                Wiki.Add(newInformation);
-                ClearInputs();
-                DisplayData();
-                SetSelectedRadioButton(0); // Select Linear
-                SetSelectedRadioButton(1); // Select Non-Linear
-                SortAndDisplayData();
+                if (string.IsNullOrEmpty(textBoxDSN.Text))
+                {
+                    statusStrip1.Items.Clear();
+                    statusStrip1.Items.Add("Empty textbox/es");
+                }
+
+                else if (comboBoxCategory.SelectedIndex == -1)
+                {
+                    statusStrip1.Items.Clear();
+                    statusStrip1.Items.Add("Empty textbox/es");
+                }
+
+                else if (!radioButtonLinear.Checked && !radioButtonNonLin.Checked)
+                {
+                    statusStrip1.Items.Clear();
+                    statusStrip1.Items.Add("Empty textbox/es");
+                }
+
+                else if (string.IsNullOrEmpty(textBoxDefinition.Text))
+                {
+                    statusStrip1.Items.Clear();
+                    statusStrip1.Items.Add("Empty textbox/es");
+                }
+
+                else
+                {
+                    // Add the new information to the list
+                    Information newInformation = new Information();
+                    newInformation.SetName(name);
+                    newInformation.SetCategory(comboBoxCategory.Text);
+                    newInformation.SetStructure(GetSelectedRadioButtonValue());
+                    newInformation.SetDefinition(textBoxDefinition.Text);
+                    buttonSave.Enabled = true;
+                    Wiki.Add(newInformation);
+                    ClearInputs();
+                    DisplayData();
+                    GetSelectedRadioButtonValue();
+                    SortAndDisplayData();
+                }
             }
             else
             {
@@ -187,6 +214,49 @@ namespace WikiDefinitionsApplication
         }
 
         /*
+        6.8 Create a button method that will save the edited record of the currently selected item in the ListView. All the 
+        changes in the input controls will be written back to the list. Display an updated version of the sorted list at the 
+        end of this process.
+        */
+        private void buttonEdit_Click(object sender, EventArgs e)
+        {
+            if (listView1.SelectedItems.Count > 0)
+            {
+                if (string.IsNullOrEmpty(textBoxDSN.Text))
+                {
+                    statusStrip1.Items.Clear();
+                    statusStrip1.Items.Add("Empty textbox/es");
+                }
+
+                else if (string.IsNullOrEmpty(textBoxDefinition.Text))
+                {
+                    statusStrip1.Items.Clear();
+                    statusStrip1.Items.Add("Empty textbox/es");
+                }
+
+                else
+                {
+                    // Get the selected item index
+                    int index = listView1.SelectedItems[0].Index;
+
+                    Wiki[index].SetName(textBoxDSN.Text);
+                    Wiki[index].SetCategory(comboBoxCategory.Text);
+                    Wiki[index].SetStructure(GetSelectedRadioButtonValue());
+                    Wiki[index].SetDefinition(textBoxDefinition.Text);
+
+                    DisplayData();
+                    ClearInputs();
+                }
+            }
+
+            else
+            {
+                statusStrip1.Items.Clear();
+                statusStrip1.Items.Add("Item in listview not selected");
+            }
+        }
+
+        /*
         6.9 Create a single custom method that will sort and then display the Name and Category from the wiki 
         information in the list.
         */
@@ -213,40 +283,39 @@ namespace WikiDefinitionsApplication
         */
         private void buttonSearch_Click(object sender, EventArgs e)
         {
-            /*
-            // Retrieve the search input from the TextBox.
             string searchName = textBoxSearch.Text;
 
-            // Create a temporary Information object for searching.
-            Information searchInfo = new Information(searchName);
+            // Find the Data Structure name using LINQ
+            Information foundInfo = Wiki.FirstOrDefault(info =>
+                string.Equals(info.GetName(), searchName, StringComparison.OrdinalIgnoreCase));
 
-            // Perform binary search on the sorted Wiki list.
-            int index = Wiki.BinarySearch(searchInfo);
-
-            // Check if the record is found.
-            if (index >= 0)
+            if (foundInfo != null)
             {
-                // Retrieve the found Information object.
-                Information foundInformation = Wiki[index];
+                // Name found, update input controls and highlight ListView item
+                textBoxDSN.Text = foundInfo.GetName();
+                comboBoxCategory.Text = foundInfo.GetCategory();
+                if (radioButtonLinear.Checked)
+                {
+                    SetSelectedRadioButton(0);
+                }
+                else
+                {
+                    SetSelectedRadioButton(1);
+                }
+                textBoxDefinition.Text = foundInfo.GetDefinition();
 
-                // Update the input controls with the associated details.
-                textBoxDSN.Text = foundInformation.GetName();
-                comboBoxCategory.Text = foundInformation.GetCategory();
-                SetSelectedRadioButton(foundInformation.GetStructure() == "Linear" ? 0 : 1);
-                textBoxDefinition.Text = foundInformation.GetDefinition();
+                int index = Wiki.IndexOf(foundInfo);
 
-                // Highlight the name in the ListView.
+                // Highlight the ListView item
                 listView1.Items[index].Selected = true;
-                listView1.Select();
-
-                // Clear the search input TextBox.
-                textBoxSearch.Clear();
+                listView1.Items[index].EnsureVisible();
             }
             else
             {
-                MessageBox.Show("Record not found.");
+                // Name not found, clear input controls
+                ClearInputs();
+                MessageBox.Show("Data Structure not found.");
             }
-            */
         }
 
         /*
@@ -257,9 +326,22 @@ namespace WikiDefinitionsApplication
         {
             if (listView1.SelectedItems.Count > 0)
             {
-                string selectedName = listView1.SelectedItems[0].Text;
+                int index = listView1.SelectedItems[0].Index;
+                string structure = Wiki[index].GetStructure();
+                textBoxDSN.Text = Wiki[index].GetName();
+                comboBoxCategory.Text = Wiki[index].GetCategory();
 
-                Information selectedData = Wiki.Find(d => d.GetName() == selectedName);
+                if (structure == "Linear")
+                {
+                    SetSelectedRadioButton(0);
+                }
+
+                else
+                {
+                    SetSelectedRadioButton(1);
+                }
+
+                textBoxDefinition.Text = Wiki[index].GetDefinition();
             }
         }
 
@@ -271,6 +353,7 @@ namespace WikiDefinitionsApplication
             textBoxDSN.Clear();
             comboBoxCategory.SelectedItem = null;
             textBoxDefinition.Clear();
+            statusStrip1.Items.Clear();
         }
 
         // 6.13 Create a double click event on the Name TextBox to clear the TextBboxes, ComboBox and Radio button.
