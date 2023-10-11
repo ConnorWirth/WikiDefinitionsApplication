@@ -73,6 +73,17 @@ namespace WikiDefinitionsApplication
             return name.CompareTo(other.name);
         }
 
+        // Constructor for the Information class that takes four parameters to initialize its fields.
+        public Information(string name, string category, string structure, string definition)
+        {
+            // Assign the provided values to the corresponding fields of the Information object.
+            this.name = name;
+            this.category = category;
+            this.structure = structure;
+            this.definition = definition;
+        }
+
+        // Default constructor for the Information class with no parameters.
         public Information() { }
     }  
 }
