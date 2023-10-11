@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.listView1 = new System.Windows.Forms.ListView();
             this.columnHeaderName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeaderCat = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -48,6 +49,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.groupBoxStructure.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -63,6 +65,7 @@
             this.listView1.Name = "listView1";
             this.listView1.Size = new System.Drawing.Size(274, 260);
             this.listView1.TabIndex = 0;
+            this.toolTip1.SetToolTip(this.listView1, "Data added will be shown here. Will change if data is edited/deleted");
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
             this.listView1.SelectedIndexChanged += new System.EventHandler(this.listView1_SelectedIndexChanged);
@@ -84,6 +87,7 @@
             this.buttonSave.Size = new System.Drawing.Size(75, 23);
             this.buttonSave.TabIndex = 1;
             this.buttonSave.Text = "Save";
+            this.toolTip1.SetToolTip(this.buttonSave, "Save items in listview into .bin file in Debug folder");
             this.buttonSave.UseVisualStyleBackColor = true;
             this.buttonSave.Click += new System.EventHandler(this.buttonSave_Click);
             // 
@@ -94,6 +98,7 @@
             this.buttonLoad.Size = new System.Drawing.Size(75, 23);
             this.buttonLoad.TabIndex = 2;
             this.buttonLoad.Text = "Load";
+            this.toolTip1.SetToolTip(this.buttonLoad, "Load data from Debug folder into listview");
             this.buttonLoad.UseVisualStyleBackColor = true;
             this.buttonLoad.Click += new System.EventHandler(this.buttonLoad_Click);
             // 
@@ -104,6 +109,7 @@
             this.buttonSearch.Size = new System.Drawing.Size(75, 23);
             this.buttonSearch.TabIndex = 3;
             this.buttonSearch.Text = "Search";
+            this.toolTip1.SetToolTip(this.buttonSearch, "Search item from listview (make sure textbox is filled before searching)");
             this.buttonSearch.UseVisualStyleBackColor = true;
             this.buttonSearch.Click += new System.EventHandler(this.buttonSearch_Click);
             // 
@@ -114,6 +120,7 @@
             this.buttonAdd.Size = new System.Drawing.Size(75, 23);
             this.buttonAdd.TabIndex = 4;
             this.buttonAdd.Text = "Add";
+            this.toolTip1.SetToolTip(this.buttonAdd, "Add data into listview (make sure to fill all values below)");
             this.buttonAdd.UseVisualStyleBackColor = true;
             this.buttonAdd.Click += new System.EventHandler(this.ButtonAdd_Click);
             // 
@@ -124,6 +131,8 @@
             this.buttonEdit.Size = new System.Drawing.Size(75, 23);
             this.buttonEdit.TabIndex = 5;
             this.buttonEdit.Text = "Edit";
+            this.toolTip1.SetToolTip(this.buttonEdit, "Edit data from listview (make sure to fill all values below and select item in li" +
+        "stview)");
             this.buttonEdit.UseVisualStyleBackColor = true;
             this.buttonEdit.Click += new System.EventHandler(this.buttonEdit_Click);
             // 
@@ -134,6 +143,7 @@
             this.buttonDelete.Size = new System.Drawing.Size(75, 23);
             this.buttonDelete.TabIndex = 6;
             this.buttonDelete.Text = "Delete";
+            this.toolTip1.SetToolTip(this.buttonDelete, "Delete item from listview");
             this.buttonDelete.UseVisualStyleBackColor = true;
             this.buttonDelete.Click += new System.EventHandler(this.buttonDelete_Click);
             // 
@@ -165,6 +175,7 @@
             this.textBoxDSN.Name = "textBoxDSN";
             this.textBoxDSN.Size = new System.Drawing.Size(237, 20);
             this.textBoxDSN.TabIndex = 9;
+            this.toolTip1.SetToolTip(this.textBoxDSN, "Insert item name here (double-click in textbox to clear all four inputs below)");
             // 
             // textBoxSearch
             // 
@@ -172,6 +183,7 @@
             this.textBoxSearch.Name = "textBoxSearch";
             this.textBoxSearch.Size = new System.Drawing.Size(180, 20);
             this.textBoxSearch.TabIndex = 10;
+            this.toolTip1.SetToolTip(this.textBoxSearch, "Enter text here that you want to search from listview");
             // 
             // textBoxDefinition
             // 
@@ -180,6 +192,7 @@
             this.textBoxDefinition.Name = "textBoxDefinition";
             this.textBoxDefinition.Size = new System.Drawing.Size(237, 83);
             this.textBoxDefinition.TabIndex = 11;
+            this.toolTip1.SetToolTip(this.textBoxDefinition, "Insert item definition here");
             // 
             // groupBoxStructure
             // 
@@ -191,6 +204,7 @@
             this.groupBoxStructure.TabIndex = 12;
             this.groupBoxStructure.TabStop = false;
             this.groupBoxStructure.Text = "Structure";
+            this.toolTip1.SetToolTip(this.groupBoxStructure, "Select structure type of item by clicking on one of the buttons");
             // 
             // comboBoxCategory
             // 
@@ -200,6 +214,7 @@
             this.comboBoxCategory.Name = "comboBoxCategory";
             this.comboBoxCategory.Size = new System.Drawing.Size(237, 21);
             this.comboBoxCategory.TabIndex = 13;
+            this.toolTip1.SetToolTip(this.comboBoxCategory, "Select category for item via dropdown menu");
             // 
             // statusStrip1
             // 
@@ -290,6 +305,7 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.ColumnHeader columnHeaderName;
         private System.Windows.Forms.ColumnHeader columnHeaderCat;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }
 
